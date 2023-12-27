@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}HomePage{% endblock title %}
+
+{% block content %}
+
+<h2>HomePage</h2>
+<h3>Welcome to Chatty</h3>
+
+
+{% if user.is_authenticated %}
+<h3>Hello {{request.user.username}}!</h3>
+<button><a href="{% url 'create_room' %}">Create Room</a></button>
+<button type="submit"><a href="{% url 'signout' %}">logout</a></button>
+<br><hr>
+{% else %}
+<button type="submit"><a href="{% url 'register' %}">Register</a></button>
+<br><br>
+<button type="submit"><a href="{% url 'signin' %}">LogIn</a></button>
+{% endif %}
+
+<h2>Search For groups</h2>
+<form action="{% url 'search' %}" method="get">
+    <input type="text" name="name">
+    <button type="submit">Search</button>
+</form>
+
+<h3>Avaliable Rooms</h3>
+
+{% for room in chatrooms %}
+  <h3>{{room.name}}</h3>
+  <p>{{room.participants.count }} Member</p>
+  <p>Date Created: <small>{{room.date_created}}</small></p>
+  <a href="{% url 'chat_room' room_id=room.room_id %}">Join Room </a>
+{% endfor %}
+
+{% endblock content %}
+

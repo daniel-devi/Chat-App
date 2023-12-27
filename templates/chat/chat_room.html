@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+
+{% block title %}Room: {{room.name}}{% endblock title %}
+
+{% block content %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+window.addEventListener('load', function () {
+    var textarea = document.getElementsByTagName('textarea')[0];
+    textarea.value = '';
+});
+</script>
+
+<a href="{% url 'home' %}"><</a>
+        
+<p id="roomid" style="display: none">{{ id }}</p>
+<h1>Chat Room {{room.name}}</h1><br>
+<h3>{{room.participants.count}} Member</h3>
+<ul>
+    <ol>{{members.tags.exclude}}</ol>
+</ul>
+{% if request.user in room.participants.all %}
+
+<div>
+    {% for message in messages  %}
+       <p>{{message}}</p>
+    {% endfor %}
+</div>
+<style>
+
+body {
+    margin: 0 auto;
+    max-width: 800px;
+    padding: 0 20px;
+}
+
+a{
+    font-size: 02rem;
+}
+
+.container {
+    border: 2px solid #dedede;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.darker {
+    border-color: #ccc;
+    background-color: #ddd;
+}
+
+.container::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+.container img {
+    float: left;
+    max-width: 60px;
+    width: 100%;
+    margin-right: 20px;
+    border-radius: 50%;
+}
+
+.container img.right {
+    float: right;
+    margin-left: 20px;
+    margin-right: 0;
+}
+
+.time-right {
+    float: right;
+    color: #aaa;
+}
+
+.time-left {
+    float: left;
+    color: #999;
+}
+
+
+</style>
+
+<div id="display">
+    
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        setInterval(function () {
+            $.ajax({
+                type: 'GET',
+                url: "/getMessages/{{id}}/",
+                success: function (response) {
+                console.log(response);
+                $("#display").empty();
+                for (var key in response.messages) {
+                    // Usage
+                    var temp = "<div class='container darker'><b>" + response.messages[key].sender_id + "</b><p>" + response.messages[key].content + "</p><span class='time-left'>" + response.messages[key].timestamp + "</span></div>";
+                    $("#display").append(temp);
+                }
+            },
+
+            error: function (response) {
+                    console('An error occured')
+                 }
+                    });
+                }, 1000);
+    })
+</script>
+
+
+<script>
+                    
+(function ($) {
+    $.fn.timesince = function () {
+        return this.each(function () {
+            var date = new Date($(this).text());
+            var timesince = calculateTimesince(date);
+            $(this).text(timesince);
+            });
+                };
+        })(jQuery);
+        window.addEventListener('load', function () {
+                document.getElementById('inputBox').value = '';
+            });
+
+
+$(document).ready(function () {
+    $(".time-left").timesince();
+        });
+
+</script>
+
+<div class="container">
+    <style>
+        input[type=text],
+        select {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            }
+
+        input[type=submit] {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+                }
+
+        input[type=submit]:hover {
+            background-color: #45a049;
+                }
+
+        div {
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            padding: 20px;
+            }
+    </style>
+
+<form action="" method="post" id="post-form" novalidate>
+ {% csrf_token %}
+    {{form.content}}<br>
+<button type="submit">Send</button>
+</form>
+</div>
+
+{% else %}
+<b>
+   <p>You are not a member of this group</p> 
+</b>
+{% endif %}
+
+{% endblock %}

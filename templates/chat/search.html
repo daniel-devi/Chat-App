@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Search for {{ query }}
+{% endblock title %}
+
+{% block content %}
+
+<h1>Search Result for {{query}}</h1>
+<p>Number of result found {{count}}</p>
+<br>
+<hr>
+<h2>Results</h2>
+{% for result in instances %}
+  <h3>{{result.name}}</h3>
+  <p>{{result.date_created}}</p>
+  <a href="{% url 'chat_room' room_id=result.room_id %}">Join GroupChat</a>
+  {% empty %}
+  <p>No Group with such name Found</p>
+{% endfor %}
+
+{% endblock content %}

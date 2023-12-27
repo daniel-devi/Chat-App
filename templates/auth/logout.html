@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+
+{% if user.is_authenticated %}
+   <h3>{{username}} is logged in</h3>
+   
+{% else%}
+    <h3>User Has been  Logoged Out</h3>
+    <button><a href="{% url 'signin' %}">Signin</a></button>
+    <button><a href="{% url 'home' %}">Go to Homepage</a></button>
+{% endif %}
+
+
+
+</body>
+</html>
