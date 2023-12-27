@@ -38,6 +38,7 @@ def createRoom(request):
             instance = form.save(commit=False)
             instance.creator = request.user
             instance.admins = request.user
+            instance.save()
             messages.success(request, 'Your Group was Created')
             return redirect('home')
         else:
@@ -102,6 +103,7 @@ def getMessages(request, room_id):
     return JsonResponse({"messages":list(messages.values())})
 
 
-
-def send(request):
-    pass
+@login_required
+def chatbot(request):
+    context = {}
+    return render(request, 'chat/chatbot.html', context)
